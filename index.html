@@ -8,6 +8,12 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
     <!-- Scripts & Styles -->
+    <script>
+        // Security Gate: Check session BEFORE anything else loads
+        if (localStorage.getItem('expensify_session') !== 'active') {
+            window.location.href = 'login.html';
+        }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -109,9 +115,14 @@
                     </div>
                 </div>
                 <button id="sync-btn"
-                    class="w-full py-2 bg-white dark:bg-slate-700 text-xs font-bold rounded-lg shadow-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                    class="w-full py-2 bg-white dark:bg-slate-700 text-xs font-bold rounded-lg shadow-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 mb-2">
                     <i class="fa-solid fa-rotate"></i>
                     Sync Now
+                </button>
+                <button id="logout-btn"
+                    class="w-full py-2 bg-rose-500/10 text-rose-500 text-xs font-bold rounded-lg hover:bg-rose-500/20 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-power-off"></i>
+                    Logout
                 </button>
             </div>
         </div>

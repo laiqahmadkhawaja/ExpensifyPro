@@ -236,6 +236,10 @@ const UI = {
                 this.toggleCategoryModal(false);
             }
         });
+
+        $('#logout-btn, #logout-btn-mobile, #logout-btn-settings').on('click', () => {
+            this.logout();
+        });
     },
 
     async loadCategories() {
@@ -249,6 +253,7 @@ const UI = {
             if (settings) {
                 this.settings.INITIAL_CASH = parseFloat(settings.INITIAL_CASH) || 0;
                 this.settings.INITIAL_BANK = parseFloat(settings.INITIAL_BANK) || 0;
+                this.settings.APP_PASSCODE = settings.APP_PASSCODE;
             }
             
             this.categoryCache = {};
@@ -502,7 +507,7 @@ const UI = {
     },
 
     updateDashboard(transactions, partnerIncome) {
-        if (!transactions || !partnerIncome) return;
+        if (!this.table || !transactions || !partnerIncome) return;
         
         // Populate Year Filter for Reports
         this.populateReportYears(transactions, partnerIncome);
@@ -572,7 +577,7 @@ const UI = {
     },
 
     updateChartData(transactions, partnerIncome) {
-        if (!transactions || !partnerIncome) return;
+        if (!this.chart || !transactions || !partnerIncome) return;
 
         // Simple daily spending for last 7 days
         const last7Days = [...Array(7)].map((_, i) => {
@@ -633,7 +638,7 @@ const UI = {
     },
 
     updateReports(transactions, partnerIncome) {
-        if (!transactions || !partnerIncome) return;
+        if (!this.table || !transactions || !partnerIncome) return;
 
         const selectedMonth = $('#report-month-filter').val(); // 'all' or 0-11
         const selectedYear = parseInt($('#report-year-filter').val()) || new Date().getFullYear();
@@ -977,5 +982,24 @@ const UI = {
         if (!$('#report-month-filter').data('initialized')) {
             $('#report-month-filter').val(new Date().getMonth()).data('initialized', true);
         }
+    },
+
+    logout() {
+        Swal.fire({
+            title: 'Secure Logout?',
+            text: "You will need the passcode to access your data again.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#475569',
+            confirmButtonText: 'Logout',
+            background: '#1e293b',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('expensify_session');
+                window.location.href = 'login.html';
+            }
+        });
     }
 };

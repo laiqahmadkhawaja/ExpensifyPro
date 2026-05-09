@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | ExpensifyPro</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- Scripts & Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .bg-primary { background-color: #6366f1; }
+        .text-primary { color: #6366f1; }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-slate-100 min-h-screen flex items-center justify-center p-6">
+
+    <!-- Background Decoration -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-500/20 rounded-full blur-[120px]"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px]"></div>
+    </div>
+    
+    <div class="glass-card max-w-sm w-full p-10 rounded-[3rem] border border-white/10 shadow-2xl relative z-10 text-center animate-fade-in">
+        <div class="w-20 h-20 bg-primary rounded-3xl flex items-center justify-center shadow-2xl shadow-primary/40 mx-auto mb-8">
+            <i class="fa-solid fa-shield-halved text-white text-3xl"></i>
+        </div>
+        
+        <h2 class="text-xl font-black mb-1 tracking-tight">Expensify<span class="text-primary">Pro</span></h2>
+        <p class="text-slate-400 text-[10px] font-bold mb-6 uppercase tracking-[0.2em]">Secure Access</p>
+        
+        <form id="auth-form" class="space-y-5">
+            <div class="relative group">
+                <input type="password" id="auth-passcode" maxlength="4" placeholder="••••" required autofocus
+                    class="w-full text-center text-3xl tracking-[1.2em] font-black bg-slate-800/50 border-2 border-white/5 rounded-2xl py-5 outline-none focus:border-primary/50 transition-all placeholder:text-slate-700">
+                <div class="absolute inset-0 rounded-2xl pointer-events-none group-focus-within:ring-4 ring-primary/10 transition-all"></div>
+            </div>
+            
+            <button type="submit" class="w-full py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95 flex items-center justify-center gap-3">
+                <span id="btn-text">UNLOCK SYSTEM</span>
+                <div id="btn-loader" class="hidden w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            </button>
+        </form>
+        
+        <p class="mt-8 text-xs text-slate-500 font-bold uppercase tracking-tighter opacity-50">
+            End-to-End Encrypted Data
+        </p>
+    </div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/sheets.js"></script>
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>
