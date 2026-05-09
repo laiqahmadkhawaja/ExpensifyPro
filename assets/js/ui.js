@@ -583,10 +583,12 @@ const UI = {
 
         const dailyData = last7Days.map(date => {
             const expense = transactions
-                .filter(t => t.date === date && t.flow === 'Out')
+                .filter(t => {
+                    const tDate = t.date ? new Date(t.date).toISOString().split('T')[0] : '';
+                    return tDate === date && (t.flow || '').toLowerCase() === 'out';
+                })
                 .reduce((sum, t) => sum + parseFloat(t.amount), 0);
             
-            // We could also show income here if needed, but for now we track net or just spending
             return expense;
         });
 
@@ -597,7 +599,7 @@ const UI = {
 
     updateCategoryList(transactions) {
         const categories = {};
-        transactions.filter(t => t.flow === 'Out').forEach(t => {
+        transactions.filter(t => (t.flow || '').toLowerCase() === 'out').forEach(t => {
             categories[t.category] = (categories[t.category] || 0) + parseFloat(t.amount);
         });
 
