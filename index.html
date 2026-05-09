@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Version: 1.0.1 (Cache Reset) -->
     <title>ExpensifyPro | Premium Financial Suite</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
@@ -136,16 +137,24 @@
                 <h2 id="view-title" class="text-2xl font-bold">Dashboard</h2>
                 <p class="text-slate-500 dark:text-slate-400">Welcome back, track your spending today.</p>
             </div>
-            <div class="flex items-center gap-3">
-                <button id="add-transaction-btn"
-                    class="flex items-center gap-2 px-5 py-3 bg-primary text-white rounded-2xl font-semibold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add Entry</span>
+            <div class="flex items-center gap-2">
+                <button id="sync-btn-mobile"
+                    class="lg:hidden w-11 h-11 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-primary shadow-sm active:scale-95 transition-all">
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+                <button id="logout-btn-mobile"
+                    class="lg:hidden w-11 h-11 flex items-center justify-center bg-rose-500/10 rounded-xl border border-rose-500/20 text-rose-500 shadow-sm active:scale-95 transition-all">
+                    <i class="fa-solid fa-power-off"></i>
                 </button>
                 <button id="theme-toggle"
-                    class="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-500 transition-all">
+                    class="w-11 h-11 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 shadow-sm active:scale-95 transition-all">
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+                <button id="add-transaction-btn"
+                    class="flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="hidden sm:inline">Add Entry</span>
                 </button>
             </div>
         </header>
@@ -509,30 +518,30 @@
 
     <!-- Bottom Nav (Mobile) -->
     <nav
-        class="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">
-        <button data-view="dashboard" class="mobile-nav-link active flex flex-col items-center gap-1 text-slate-400">
-            <i class="fa-solid fa-grid-2 text-xl"></i>
-            <span class="text-[10px] font-bold">Dash</span>
+        class="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-2 py-3 flex justify-between items-center z-50">
+        <button data-view="dashboard" class="mobile-nav-link active flex flex-col items-center gap-1 text-slate-400 flex-1">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[9px] font-bold">Dash</span>
         </button>
-        <button data-view="transactions" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
-            <i class="fa-solid fa-list-ul text-xl"></i>
-            <span class="text-[10px] font-bold">History</span>
+        <button data-view="partner-income" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400 flex-1">
+            <i class="fa-solid fa-handshake text-lg"></i>
+            <span class="text-[9px] font-bold">Income</span>
         </button>
-        <button id="add-transaction-mobile"
-            class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30 -mt-8 border-4 border-slate-50 dark:border-dark">
-            <i class="fa-solid fa-plus text-xl"></i>
+        <button data-view="transactions" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400 flex-1">
+            <i class="fa-solid fa-list-ul text-lg"></i>
+            <span class="text-[9px] font-bold">History</span>
         </button>
-        <button data-view="categories" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
-            <i class="fa-solid fa-tags text-xl"></i>
-            <span class="text-[10px] font-bold">Cats</span>
+        <button data-view="categories" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400 flex-1">
+            <i class="fa-solid fa-tags text-lg"></i>
+            <span class="text-[9px] font-bold">Cats</span>
         </button>
-        <button data-view="reports" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
-            <i class="fa-solid fa-chart-line text-xl"></i>
-            <span class="text-[10px] font-bold">Reports</span>
+        <button data-view="reports" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400 flex-1">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span class="text-[9px] font-bold">Reports</span>
         </button>
-        <button data-view="settings" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
-            <i class="fa-solid fa-gear text-xl"></i>
-            <span class="text-[10px] font-bold">Sets</span>
+        <button data-view="settings" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400 flex-1">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span class="text-[9px] font-bold">Sets</span>
         </button>
     </nav>
 

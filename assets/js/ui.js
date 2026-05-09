@@ -185,7 +185,7 @@ const UI = {
         });
 
         // Transaction Modal Handling
-        $('#add-transaction-btn, #add-transaction-mobile').on('click', () => this.toggleModal(true));
+        $('#add-transaction-btn').on('click', () => this.toggleModal(true));
         $('#close-modal').on('click', () => this.toggleModal(false));
 
         // Partner Income Modal Handling
@@ -235,6 +235,11 @@ const UI = {
                 this.togglePartnerIncomeModal(false);
                 this.toggleCategoryModal(false);
             }
+        });
+
+        // Sync Handling
+        $('#sync-btn, #sync-btn-mobile').on('click', () => {
+            if (window.refreshData) window.refreshData();
         });
 
         $('#logout-btn, #logout-btn-mobile, #logout-btn-settings').on('click', () => {
