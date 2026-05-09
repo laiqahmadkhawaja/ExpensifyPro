@@ -1,0 +1,147 @@
+/* Custom Glassmorphism and Animations */
+:root {
+    --primary: #6366f1;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass-card {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Sidebar Nav */
+.nav-link.active {
+    background: var(--primary);
+    color: white !important;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+.mobile-nav-link.active {
+    color: var(--primary) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+/* DataTables Custom Styling */
+.dataTables_wrapper .dataTables_filter input {
+    border: none !important;
+    background: #f1f5f9 !important;
+    border-radius: 12px !important;
+    padding: 8px 16px !important;
+    outline: none !important;
+    font-weight: 500 !important;
+}
+
+.dark .dataTables_wrapper .dataTables_filter input {
+    background: #1e293b !important;
+    color: white !important;
+}
+
+table.dataTable {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    border: none !important;
+}
+
+table.dataTable thead th {
+    border-bottom: none !important;
+    color: #94a3b8 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+table.dataTable tbody tr {
+    background: white !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    transition: transform 0.2s ease !important;
+}
+
+.dark table.dataTable tbody tr {
+    background: #0f172a !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+}
+
+table.dataTable tbody tr:hover {
+    transform: scale(1.01);
+}
+
+table.dataTable tbody td {
+    border: none !important;
+    padding: 16px !important;
+    font-weight: 500 !important;
+}
+
+table.dataTable tbody td:first-child {
+    border-top-left-radius: 16px !important;
+    border-bottom-left-radius: 16px !important;
+}
+
+table.dataTable tbody td:last-child {
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+/* Modal Animation */
+#modal-content.show, #category-modal-content.show {
+    scale: 1;
+    opacity: 1;
+}
+
+/* Floating Animation */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.float-anim {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Input Styles */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}

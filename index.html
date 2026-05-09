@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenseTracker | Premium Financial Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#a855f7',
+                        accent: '#f43f5e',
+                        dark: '#0f172a',
+                        glass: 'rgba(255, 255, 255, 0.1)',
+                        'glass-dark': 'rgba(15, 23, 42, 0.8)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-50 dark:bg-dark text-slate-900 dark:text-slate-100 min-h-screen font-sans">
+
+    <!-- Global Loader -->
+    <div id="global-loader"
+        class="fixed inset-0 bg-dark/20 backdrop-blur-[2px] z-[999] hidden items-center justify-center">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+            <p class="text-sm font-bold text-slate-500">Syncing Data...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar (Desktop) -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-50 transition-transform -translate-x-full lg:translate-x-0">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-10">
+                <div
+                    class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+                    <i class="fa-solid fa-wallet text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">Expensify<span class="text-primary">Pro</span></h1>
+            </div>
+
+            <nav class="space-y-1">
+                <a href="#" data-view="dashboard"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800 group active">
+                    <i class="fa-solid fa-house text-lg"></i>
+                    <span class="font-bold">Dashboard</span>
+                </a>
+                <a href="#" data-view="partner-income"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800 group">
+                    <i class="fa-solid fa-handshake text-lg"></i>
+                    <span class="font-bold">Income Tracking</span>
+                </a>
+                <a href="#" data-view="transactions"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800 group">
+                    <i class="fa-solid fa-list-ul text-lg"></i>
+                    <span class="font-bold">Transactions</span>
+                </a>
+                <a href="#" data-view="categories"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
+                    <i class="fa-solid fa-tags text-lg"></i>
+                    <span class="font-bold">Categories</span>
+                </a>
+                <a href="#" data-view="reports"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                    <span class="font-bold">Reports</span>
+                </a>
+                <a href="#" data-view="settings"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
+                    <i class="fa-solid fa-gear text-lg"></i>
+                    <span class="font-bold">Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="absolute bottom-6 left-6 right-6">
+            <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-2xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-primary text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold">User Account</p>
+                        <p id="sync-status" class="text-xs text-slate-500">Connected</p>
+                    </div>
+                </div>
+                <button id="sync-btn"
+                    class="w-full py-2 bg-white dark:bg-slate-700 text-xs font-bold rounded-lg shadow-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate"></i>
+                    Sync Now
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:ml-64 p-4 md:p-8 pb-24 lg:pb-8">
+        <!-- Top Bar -->
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h2 id="view-title" class="text-2xl font-bold">Dashboard</h2>
+                <p class="text-slate-500 dark:text-slate-400">Welcome back, track your spending today.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="add-transaction-btn"
+                    class="flex items-center gap-2 px-5 py-3 bg-primary text-white rounded-2xl font-semibold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Entry</span>
+                </button>
+                <button id="theme-toggle"
+                    class="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-500 transition-all">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- View Containers -->
+        <div id="view-dashboard" class="view-content">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all">
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Total Balance</p>
+                    <h3 id="stat-total-balance" class="text-2xl font-bold tracking-tight">$0.00</h3>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-semibold text-emerald-500">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        <span>+2.4% from last month</span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all">
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Cash In Hand</p>
+                    <h3 id="stat-cash" class="text-2xl font-bold tracking-tight">$0.00</h3>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-semibold text-primary">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <span>Liquid Asset</span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all">
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Account Balance</p>
+                    <h3 id="stat-account" class="text-2xl font-bold tracking-tight">$0.00</h3>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-semibold text-indigo-500">
+                        <i class="fa-solid fa-university"></i>
+                        <span>Bank Deposits</span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition-all">
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Monthly Spending</p>
+                    <h3 id="stat-spending" class="text-2xl font-bold tracking-tight">$0.00</h3>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-semibold text-rose-500">
+                        <i class="fa-solid fa-arrow-trend-down"></i>
+                        <span>Higher than avg</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Chart Area -->
+                <div class="lg:col-span-2 glass-card p-6 rounded-3xl border border-white/20 shadow-xl">
+                    <div class="flex items-center justify-between mb-6">
+                        <h4 class="font-bold">Spending Overview</h4>
+                        <select
+                            class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-xs font-bold px-3 py-1 outline-none">
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                        </select>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="spendingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Category Cards -->
+                <div class="space-y-4">
+                    <h4 class="font-bold mb-2">Major Categories</h4>
+                    <div id="major-categories-list" class="space-y-3">
+                        <!-- Category card placeholder -->
+                        <div
+                            class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-500">
+                                    <i class="fa-solid fa-utensils"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold">Food & Drinks</p>
+                                    <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mt-1">
+                                        <div class="bg-orange-500 h-full rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="font-bold ml-4">$450</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partner Income View -->
+        <div id="view-partner-income" class="view-content hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold">Income Tracker</h3>
+                    <p class="text-sm text-slate-500">Manage earnings received through partners</p>
+                </div>
+                <button id="add-partner-income-btn"
+                    class="px-6 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i>
+                    Log Payment
+                </button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-primary">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Total Project Value</p>
+                    <h4 id="mkt-total-project" class="text-2xl font-bold">Rs.0.00</h4>
+                </div>
+                <div
+                    class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-emerald-500">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">My Total Share</p>
+                    <h4 id="pi-my-total" class="text-2xl font-bold text-emerald-500">Rs.0.00</h4>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-amber-500">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Pending from Partner</p>
+                    <h4 id="pi-pending" class="text-2xl font-bold text-amber-500">Rs.0.00</h4>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl overflow-hidden">
+                <table id="partnerIncomeTable" class="display responsive nowrap w-full" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Source/Client</th>
+                            <th>Total Amount</th>
+                            <th>My Share (%)</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-transactions" class="view-content hidden">
+            <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl overflow-hidden">
+                <table id="transactionsTable" class="display responsive nowrap w-full" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Method</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-categories" class="view-content hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold">Manage Categories</h3>
+                <button id="add-category-btn"
+                    class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20">
+                    <i class="fa-solid fa-plus mr-1"></i> New Category
+                </button>
+            </div>
+            <div id="categories-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Categories will load here -->
+            </div>
+        </div>
+
+        <div id="view-reports" class="view-content hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold">Financial Analytics</h3>
+                    <p class="text-sm text-slate-500">In-depth breakdown of your financial habits</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <select id="report-year-filter"
+                        class="bg-white dark:bg-slate-800 border-none rounded-xl text-sm font-bold px-4 py-2 outline-none shadow-sm min-w-[100px]">
+                        <!-- Populated dynamically -->
+                    </select>
+                    <select id="report-month-filter"
+                        class="bg-white dark:bg-slate-800 border-none rounded-xl text-sm font-bold px-4 py-2 outline-none shadow-sm">
+                        <option value="all">Full Year</option>
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Period Main Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div
+                    class="glass-card p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fa-solid fa-wallet text-6xl"></i>
+                    </div>
+                    <p class="text-sm font-bold text-slate-400 mb-2 uppercase tracking-widest">Total Balance</p>
+                    <h3 id="report-total-balance-stat" class="text-4xl font-black text-white mb-4">Rs.0.00</h3>
+                    <div class="flex items-center gap-2 text-emerald-500 text-sm font-bold">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Period Performance</span>
+                    </div>
+                </div>
+
+                <div
+                    class="glass-card p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fa-solid fa-money-bill-wave text-6xl"></i>
+                    </div>
+                    <p class="text-sm font-bold text-slate-400 mb-2 uppercase tracking-widest">Cash In Hand</p>
+                    <h3 id="report-cash-stat" class="text-4xl font-black text-white mb-4">Rs.0.00</h3>
+                    <div class="flex items-center gap-2 text-blue-400 text-sm font-bold">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <span>Liquid Movement</span>
+                    </div>
+                </div>
+
+                <div
+                    class="glass-card p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fa-solid fa-building-columns text-6xl"></i>
+                    </div>
+                    <p class="text-sm font-bold text-slate-400 mb-2 uppercase tracking-widest">Account Balance</p>
+                    <h3 id="report-account-stat" class="text-4xl font-black text-white mb-4">Rs.0.00</h3>
+                    <div class="flex items-center gap-2 text-indigo-400 text-sm font-bold">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                        <span>Bank Deposits</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+                <div
+                    class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-emerald-500">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Total Income</p>
+                    <h4 id="report-total-income" class="text-xl font-bold text-emerald-500">Rs.0.00</h4>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-rose-500">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Total Expense</p>
+                    <h4 id="report-total-expense" class="text-xl font-bold text-rose-500">Rs.0.00</h4>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-cyan-500">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cash In (Returns)</p>
+                    <h4 id="report-cash-in" class="text-xl font-bold text-cyan-500">Rs.0.00</h4>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-amber-500">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Net Cash Flow</p>
+                    <h4 id="report-cash-flow" class="text-xl font-bold text-amber-500">Rs.0.00</h4>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-white/20 shadow-xl border-l-4 border-l-primary">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Net Balance</p>
+                    <h4 id="report-net-balance" class="text-xl font-bold text-primary">Rs.0.00</h4>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Category Breakdown -->
+                <div class="glass-card p-8 rounded-3xl border border-white/20 shadow-xl">
+                    <h4 class="font-bold mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-primary"></i> Spending by Category
+                    </h4>
+                    <div class="h-64 relative">
+                        <canvas id="categoryReportChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Income vs Expense -->
+                <div class="glass-card p-8 rounded-3xl border border-white/20 shadow-xl">
+                    <h4 class="font-bold mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-primary"></i> Income vs Expenses
+                    </h4>
+                    <div class="h-64 relative">
+                        <canvas id="trendReportChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="mt-8 glass-card p-8 rounded-3xl border border-white/20 shadow-xl">
+                <h4 class="font-bold mb-4">Smart Insights</h4>
+                <div id="report-insights" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Insights will load dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <div id="view-settings" class="view-content hidden">
+            <div class="max-w-2xl">
+                <div class="glass-card p-8 rounded-3xl border border-white/20 shadow-xl">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div
+                            class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-xl">
+                            <i class="fa-solid fa-vault"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold">Opening Balances</h4>
+                            <p class="text-sm text-slate-500">Set your starting cash and bank amounts</p>
+                        </div>
+                    </div>
+
+                    <form id="settings-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Cash Opening
+                                    Balance</label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
+                                    <input type="number" step="0.01" name="INITIAL_CASH" id="setting-initial-cash"
+                                        class="w-full pl-8 pr-4 py-4 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold"
+                                        placeholder="0.00">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Bank Opening
+                                    Balance</label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
+                                    <input type="number" step="0.01" name="INITIAL_BANK" id="setting-initial-bank"
+                                        class="w-full pl-8 pr-4 py-4 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold"
+                                        placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit"
+                                class="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                Save Settings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Nav (Mobile) -->
+    <nav
+        class="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">
+        <button data-view="dashboard" class="mobile-nav-link active flex flex-col items-center gap-1 text-slate-400">
+            <i class="fa-solid fa-grid-2 text-xl"></i>
+            <span class="text-[10px] font-bold">Dash</span>
+        </button>
+        <button data-view="transactions" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
+            <i class="fa-solid fa-list-ul text-xl"></i>
+            <span class="text-[10px] font-bold">History</span>
+        </button>
+        <button id="add-transaction-mobile"
+            class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30 -mt-8 border-4 border-slate-50 dark:border-dark">
+            <i class="fa-solid fa-plus text-xl"></i>
+        </button>
+        <button data-view="categories" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
+            <i class="fa-solid fa-tags text-xl"></i>
+            <span class="text-[10px] font-bold">Tags</span>
+        </button>
+        <button data-view="settings" class="mobile-nav-link flex flex-col items-center gap-1 text-slate-400">
+            <i class="fa-solid fa-gear text-xl"></i>
+            <span class="text-[10px] font-bold">Settings</span>
+        </button>
+    </nav>
+
+    <!-- Add Transaction Modal -->
+    <div id="modal-container"
+        class="fixed inset-0 bg-dark/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div id="modal-content"
+            class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="transaction-modal-title" class="text-xl font-bold">Add Transaction</h3>
+                <button id="close-modal" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <form id="transaction-form" class="p-6 space-y-4">
+                <input type="hidden" name="id" id="transaction-id">
+                <input type="hidden" name="action" id="transaction-action" value="add">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Flow</label>
+                        <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                            <label class="flex-1">
+                                <input type="radio" name="flow" value="In" class="sr-only peer">
+                                <div
+                                    class="text-center py-2 rounded-lg peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-emerald-500 peer-checked:shadow-sm cursor-pointer transition-all text-sm font-bold">
+                                    IN</div>
+                            </label>
+                            <label class="flex-1">
+                                <input type="radio" name="flow" value="Out" checked class="sr-only peer">
+                                <div
+                                    class="text-center py-2 rounded-lg peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-rose-500 peer-checked:shadow-sm cursor-pointer transition-all text-sm font-bold">
+                                    OUT</div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Method</label>
+                        <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                            <label class="flex-1">
+                                <input type="radio" name="method" value="Cash" checked class="sr-only peer">
+                                <div
+                                    class="text-center py-2 rounded-lg peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-primary peer-checked:shadow-sm cursor-pointer transition-all text-sm font-bold">
+                                    CASH</div>
+                            </label>
+                            <label class="flex-1">
+                                <input type="radio" name="method" value="Account" class="sr-only peer">
+                                <div
+                                    class="text-center py-2 rounded-lg peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-primary peer-checked:shadow-sm cursor-pointer transition-all text-sm font-bold">
+                                    BANK</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
+                        <input type="number" step="0.01" name="amount" required
+                            class="w-full pl-8 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold"
+                            placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Category</label>
+                    <select id="transaction-category-select" name="category" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-medium">
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Description</label>
+                    <input type="text" name="description" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20"
+                        placeholder="What was this for?">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Date</label>
+                    <input type="date" name="date" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20">
+                </div>
+
+                <button type="submit"
+                    class="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Save Transaction</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="category-modal-container"
+        class="fixed inset-0 bg-dark/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div id="category-modal-content"
+            class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="category-modal-title" class="text-xl font-bold">New Category</h3>
+                <button id="close-category-modal" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <form id="category-form" class="p-6 space-y-4">
+                <input type="hidden" name="originalName" id="category-original-name">
+                <input type="hidden" name="action" id="category-action" value="add">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Category Name</label>
+                    <input type="text" name="name" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20"
+                        placeholder="e.g. Health, Pets">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Icon (FontAwesome
+                        Class)</label>
+                    <div class="relative">
+                        <input type="text" id="category-icon-input" name="icon" required
+                            class="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20"
+                            placeholder="fa-heart">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                            <i id="category-icon-preview" class="fa-solid fa-circle-question"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Color (Tailwind Color
+                        Name)</label>
+                    <select name="color" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-medium">
+                        <option value="indigo">Indigo</option>
+                        <option value="emerald">Green</option>
+                        <option value="rose">Red</option>
+                        <option value="orange">Orange</option>
+                        <option value="blue">Blue</option>
+                        <option value="purple">Purple</option>
+                        <option value="pink">Pink</option>
+                        <option value="slate">Grey</option>
+                    </select>
+                </div>
+                <button type="submit"
+                    class="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20">
+                    Save Category
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Partner Income Modal -->
+    <div id="partner-income-modal-container"
+        class="fixed inset-0 bg-dark/60 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
+        <div id="partner-income-modal-content"
+            class="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden transform scale-95 transition-all duration-300">
+            <div class="p-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="partner-income-modal-title" class="text-xl font-bold">Log Payment</h3>
+                <button id="close-partner-income-modal"
+                    class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="partner-income-form" class="p-8 space-y-6">
+                <input type="hidden" name="id" id="partner-income-id">
+                <input type="hidden" name="action" id="partner-income-action" value="add">
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Date Received
+                        Payment</label>
+                    <input type="date" name="date" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Source / Client
+                        Name</label>
+                    <input type="text" name="description" placeholder="e.g. Website Project" required
+                        class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Amount</label>
+                        <div class="relative">
+                            <span
+                                class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-xs">Rs.</span>
+                            <input type="number" step="0.01" name="total_amount" id="pi-input-total" required
+                                class="w-full pl-10 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Your Share (%)</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" name="percentage" id="pi-input-percent" value="25" required
+                                class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-primary/5 dark:bg-primary/10 rounded-2xl border border-primary/10">
+                    <p class="text-xs font-bold text-slate-500 uppercase mb-1">Calculated Share</p>
+                    <p id="pi-preview-share" class="text-xl font-bold text-primary">Rs.0.00</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Status</label>
+                        <select name="status"
+                            class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold">
+                            <option value="Pending">Pending</option>
+                            <option value="Received">Received</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Method</label>
+                        <select name="method"
+                            class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl outline-none focus:ring-2 ring-primary/20 font-bold">
+                            <option value="Cash">Cash</option>
+                            <option value="Account">Bank/Account</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    Save Payment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/sheets.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>
